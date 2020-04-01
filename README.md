@@ -5,34 +5,40 @@
 
 [项目官方Gitee仓库](https://gitee.com/zyc18017894/QRorDeqr)
 
+[项目官方GitHub仓库](https://github.com/18017894/QRorDeqr)
+
+[项目官方阿里云仓库](https://code.aliyun.com/18017894/QRorDeqr)
 
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  将所有文件clone或下载[发行版](https://gitee.com/zyc18017894/QRorDeqr/releases)到你的web服务器~
+    ```
+    git clone https://gitee.com/zyc18017894/QRorDeqr.git
+    ```
+    ```
+    git clone https://github.com/18017894/QRorDeqr.git
+    ```
+    ```
+    git clone https://code.aliyun.com/18017894/QRorDeqr.git
+    ```
+2.  打开index.html
+3.  根据自己需要插入到您的网页
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  不可转载
+2.  如您参与了此项目的开发，须将其开源。
 
 #### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+1.  如发现有Bug，请提交Issues
+2.  [![Fork me on Gitee](https://gitee.com/zyc18017894/QRorDeqr/widgets/widget_3.svg)](https://gitee.com/zyc18017894/QRorDeqr)
+3.  如果喜欢记得[![star](https://gitee.com/zyc18017894/QRorDeqr/badge/star.svg?theme=white)](https://gitee.com/zyc18017894/QRorDeqr/stargazers)一下哦，您的star是给我的最大的支持~
+
+本项目以于2020/xx/xx在gitee完成捐赠审核，欢迎[捐赠](https://gitee.com/zyc18017894/QrorDeqr#%E6%8D%90%E8%B5%A0)
 
 
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+# 捐赠
+> 点击下方捐赠按钮捐赠
