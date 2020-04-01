@@ -3,6 +3,8 @@
 #### Description
 A QR code decoding / generating script written by JavaScript
 
+[demo](https://zyc18017894.gitee.io/qrordeqr/)
+
 [Project official Gitee Project](https://gitee.com/zyc18017894/QRorDeqr)
 
 [Project official GitHub Project](https://github.com/18017894/QRorDeqr)
