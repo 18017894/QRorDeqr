@@ -3,8 +3,9 @@
 #### 介绍
 一个由JavaScript编写的二维码解码/生成脚本
 
-#### 软件架构
-软件架构说明
+[项目官方Gitee仓库](https://gitee.com/zyc18017894/QRorDeqr)
+
+
 
 
 #### 安装教程
