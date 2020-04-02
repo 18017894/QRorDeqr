@@ -37,4 +37,4 @@ A QR code decoding / generating script written by JavaScript
 1.  If bugs are found, please submit issues
 2.  [![Fork me on Gitee](https://gitee.com/zyc18017894/QRorDeqr/widgets/widget_3.svg)](https://gitee.com/zyc18017894/QRorDeqr)
 3.  If you like please[![star](https://gitee.com/zyc18017894/QRorDeqr/badge/star.svg?theme=white)](https://gitee.com/zyc18017894/QRorDeqr/stargazers)
-4.  [Donation](https://gitee.com/zyc18017894/QrorDeqr#%E6%8D%90%E8%B5%A0)
+4.  [Donation](https://gitee.com/zyc18017894/QRorDeqr#%E6%8D%90%E8%B5%A0)
