@@ -39,7 +39,7 @@
 2.  [![Fork me on Gitee](https://gitee.com/zyc18017894/QRorDeqr/widgets/widget_3.svg)](https://gitee.com/zyc18017894/QRorDeqr)
 3.  如果喜欢记得[![star](https://gitee.com/zyc18017894/QRorDeqr/badge/star.svg?theme=white)](https://gitee.com/zyc18017894/QRorDeqr/stargazers)一下哦，您的star是给我的最大的支持~
 
-本项目以于2020/xx/xx在gitee完成捐赠审核，欢迎[捐赠](https://gitee.com/zyc18017894/QrorDeqr#%E6%8D%90%E8%B5%A0)
+本项目以于2020/4/2在gitee完成捐赠审核，欢迎[捐赠](https://gitee.com/zyc18017894/QRorDeqr#%E6%8D%90%E8%B5%A0)
 
 
 # 捐赠
