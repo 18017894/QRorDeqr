@@ -29,8 +29,8 @@ A QR code decoding / generating script written by JavaScript
 
 #### Instructions
 
-1.  Not to be reprinted
-2.  Strictly follow the license agreement
+1.  Not to be reprinted.
+2.  Strictly follow the license agreement.
 
 #### Contribution
 
