@@ -1,5 +1,5 @@
 var aeink = {};
-aeink.checkAndNudgePoints = function (image, points) {
+aeink.checkAndNudgePoints = function(image, points) {
     var width = qrcode.width;
     var height = qrcode.height;
     var nudged = true;
@@ -17,6 +17,9 @@ aeink.checkAndNudgePoints = function (image, points) {
             if (x == width) {
                 points[offset] = width - 1;
                 nudged = true
+            } else(x != width) {
+                points[offset] = width;
+                nudged = false;
             }
         }
         if (y == -1) {
@@ -57,7 +60,7 @@ aeink.checkAndNudgePoints = function (image, points) {
         }
     }
 };
-aeink.sampleGrid3 = function (image, dimension, transform) {
+aeink.sampleGrid3 = function(image, dimension, transform) {
     var bits = new BitMatrix(dimension);
     var points = new Array(dimension << 1);
     for (var y = 0; y < dimension; y++) {
@@ -82,7 +85,7 @@ aeink.sampleGrid3 = function (image, dimension, transform) {
     }
     return bits
 };
-aeink.sampleGridx = function (image, dimension, p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY) {
+aeink.sampleGridx = function(image, dimension, p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY) {
     var transform = PerspectiveTransform.quadrilateralToQuadrilateral(p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY);
     return aeink.sampleGrid3(image, dimension, transform)
 };
@@ -90,10 +93,10 @@ aeink.sampleGridx = function (image, dimension, p1ToX, p1ToY, p2ToX, p2ToY, p3To
 function ECB(count, dataCodewords) {
     this.count = count;
     this.dataCodewords = dataCodewords;
-    this.__defineGetter__("Count", function () {
+    this.__defineGetter__("Count", function() {
         return this.count
     });
-    this.__defineGetter__("DataCodewords", function () {
+    this.__defineGetter__("DataCodewords", function() {
         return this.dataCodewords
     })
 }
@@ -105,20 +108,20 @@ function ECBlocks(ecCodewordsPerBlock, ecBlocks1, ecBlocks2) {
     } else {
         this.ecBlocks = new Array(ecBlocks1)
     }
-    this.__defineGetter__("ECCodewordsPerBlock", function () {
+    this.__defineGetter__("ECCodewordsPerBlock", function() {
         return this.ecCodewordsPerBlock
     });
-    this.__defineGetter__("TotalECCodewords", function () {
+    this.__defineGetter__("TotalECCodewords", function() {
         return this.ecCodewordsPerBlock * this.NumBlocks
     });
-    this.__defineGetter__("NumBlocks", function () {
+    this.__defineGetter__("NumBlocks", function() {
         var total = 0;
         for (var i = 0; i < this.ecBlocks.length; i++) {
             total += this.ecBlocks[i].length
         }
         return total
     });
-    this.getECBlocks = function () {
+    this.getECBlocks = function() {
         return this.ecBlocks
     }
 }
@@ -135,19 +138,19 @@ function Version(versionNumber, alignmentPatternCenters, ecBlocks1, ecBlocks2, e
         total += ecBlock.Count * (ecBlock.DataCodewords + ecCodewords)
     }
     this.totalCodewords = total;
-    this.__defineGetter__("VersionNumber", function () {
+    this.__defineGetter__("VersionNumber", function() {
         return this.versionNumber
     });
-    this.__defineGetter__("AlignmentPatternCenters", function () {
+    this.__defineGetter__("AlignmentPatternCenters", function() {
         return this.alignmentPatternCenters
     });
-    this.__defineGetter__("TotalCodewords", function () {
+    this.__defineGetter__("TotalCodewords", function() {
         return this.totalCodewords
     });
-    this.__defineGetter__("DimensionForVersion", function () {
+    this.__defineGetter__("DimensionForVersion", function() {
         return 17 + 4 * this.versionNumber
     });
-    this.buildFunctionPattern = function () {
+    this.buildFunctionPattern = function() {
         var dimension = this.DimensionForVersion;
         var bitMatrix = new BitMatrix(dimension);
         bitMatrix.setRegion(0, 0, 9, 9);
@@ -171,19 +174,19 @@ function Version(versionNumber, alignmentPatternCenters, ecBlocks1, ecBlocks2, e
         }
         return bitMatrix
     };
-    this.getECBlocksForLevel = function (ecLevel) {
+    this.getECBlocksForLevel = function(ecLevel) {
         return this.ecBlocks[ecLevel.ordinal()]
     }
 }
 Version.VERSION_DECODE_INFO = new Array(31892, 34236, 39577, 42195, 48118, 51042, 55367, 58893, 63784, 68472, 70749, 76311, 79154, 84390, 87683, 92361, 96236, 102084, 102881, 110507, 110734, 117786, 119615, 126325, 127568, 133589, 136944, 141498, 145311, 150283, 152622, 158308, 161089, 167017);
 Version.VERSIONS = buildVersions();
-Version.getVersionForNumber = function (versionNumber) {
+Version.getVersionForNumber = function(versionNumber) {
     if (versionNumber < 1 || versionNumber > 40) {
         throw "ArgumentException"
     }
     return Version.VERSIONS[versionNumber - 1]
 };
-Version.getProvisionalVersionForDimension = function (dimension) {
+Version.getProvisionalVersionForDimension = function(dimension) {
     if (dimension % 4 != 1) {
         throw "Error getProvisionalVersionForDimension"
     }
@@ -193,7 +196,7 @@ Version.getProvisionalVersionForDimension = function (dimension) {
         throw "Error getVersionForNumber"
     }
 };
-Version.decodeVersionInformation = function (versionBits) {
+Version.decodeVersionInformation = function(versionBits) {
     var bestDifference = 4294967295;
     var bestVersion = 0;
     for (var i = 0; i < Version.VERSION_DECODE_INFO.length; i++) {
@@ -227,7 +230,7 @@ function PerspectiveTransform(a11, a21, a31, a12, a22, a32, a13, a23, a33) {
     this.a31 = a31;
     this.a32 = a32;
     this.a33 = a33;
-    this.transformPoints1 = function (points) {
+    this.transformPoints1 = function(points) {
         var max = points.length;
         var a11 = this.a11;
         var a12 = this.a12;
@@ -246,7 +249,7 @@ function PerspectiveTransform(a11, a21, a31, a12, a22, a32, a13, a23, a33) {
             points[i + 1] = (a12 * x + a22 * y + a32) / denominator
         }
     };
-    this.transformPoints2 = function (xValues, yValues) {
+    this.transformPoints2 = function(xValues, yValues) {
         var n = xValues.length;
         for (var i = 0; i < n; i++) {
             var x = xValues[i];
@@ -256,19 +259,19 @@ function PerspectiveTransform(a11, a21, a31, a12, a22, a32, a13, a23, a33) {
             yValues[i] = (this.a12 * x + this.a22 * y + this.a32) / denominator
         }
     };
-    this.buildAdjoint = function () {
+    this.buildAdjoint = function() {
         return new PerspectiveTransform(this.a22 * this.a33 - this.a23 * this.a32, this.a23 * this.a31 - this.a21 * this.a33, this.a21 * this.a32 - this.a22 * this.a31, this.a13 * this.a32 - this.a12 * this.a33, this.a11 * this.a33 - this.a13 * this.a31, this.a12 * this.a31 - this.a11 * this.a32, this.a12 * this.a23 - this.a13 * this.a22, this.a13 * this.a21 - this.a11 * this.a23, this.a11 * this.a22 - this.a12 * this.a21)
     };
-    this.times = function (other) {
+    this.times = function(other) {
         return new PerspectiveTransform(this.a11 * other.a11 + this.a21 * other.a12 + this.a31 * other.a13, this.a11 * other.a21 + this.a21 * other.a22 + this.a31 * other.a23, this.a11 * other.a31 + this.a21 * other.a32 + this.a31 * other.a33, this.a12 * other.a11 + this.a22 * other.a12 + this.a32 * other.a13, this.a12 * other.a21 + this.a22 * other.a22 + this.a32 * other.a23, this.a12 * other.a31 + this.a22 * other.a32 + this.a32 * other.a33, this.a13 * other.a11 + this.a23 * other.a12 + this.a33 * other.a13, this.a13 * other.a21 + this.a23 * other.a22 + this.a33 * other.a23, this.a13 * other.a31 + this.a23 * other.a32 + this.a33 * other.a33)
     }
 }
-PerspectiveTransform.quadrilateralToQuadrilateral = function (x0, y0, x1, y1, x2, y2, x3, y3, x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p) {
+PerspectiveTransform.quadrilateralToQuadrilateral = function(x0, y0, x1, y1, x2, y2, x3, y3, x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p) {
     var qToS = this.quadrilateralToSquare(x0, y0, x1, y1, x2, y2, x3, y3);
     var sToQ = this.squareToQuadrilateral(x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p);
     return sToQ.times(qToS)
 };
-PerspectiveTransform.squareToQuadrilateral = function (x0, y0, x1, y1, x2, y2, x3, y3) {
+PerspectiveTransform.squareToQuadrilateral = function(x0, y0, x1, y1, x2, y2, x3, y3) {
     var dy2 = y3 - y2;
     var dy3 = y0 - y1 + y2 - y3;
     if (dy2 == 0 && dy3 == 0) {
@@ -284,7 +287,7 @@ PerspectiveTransform.squareToQuadrilateral = function (x0, y0, x1, y1, x2, y2, x
         return new PerspectiveTransform(x1 - x0 + a13 * x1, x3 - x0 + a23 * x3, x0, y1 - y0 + a13 * y1, y3 - y0 + a23 * y3, y0, a13, a23, 1)
     }
 };
-PerspectiveTransform.quadrilateralToSquare = function (x0, y0, x1, y1, x2, y2, x3, y3) {
+PerspectiveTransform.quadrilateralToSquare = function(x0, y0, x1, y1, x2, y2, x3, y3) {
     return this.squareToQuadrilateral(x0, y0, x1, y1, x2, y2, x3, y3).buildAdjoint()
 };
 
@@ -296,7 +299,7 @@ function DetectorResult(bits, points) {
 function Detector(image) {
     this.image = image;
     this.resultPointCallback = null;
-    this.sizeOfBlackWhiteBlackRun = function (fromX, fromY, toX, toY) {
+    this.sizeOfBlackWhiteBlackRun = function(fromX, fromY, toX, toY) {
         var steep = Math.abs(toY - fromY) > Math.abs(toX - fromX);
         if (steep) {
             var temp = fromX;
@@ -342,7 +345,7 @@ function Detector(image) {
         var diffY2 = toY - fromY;
         return Math.sqrt((diffX2 * diffX2 + diffY2 * diffY2))
     };
-    this.sizeOfBlackWhiteBlackRunBothWays = function (fromX, fromY, toX, toY) {
+    this.sizeOfBlackWhiteBlackRunBothWays = function(fromX, fromY, toX, toY) {
         var result = this.sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY);
         var scale = 1;
         var otherToX = fromX - (toX - fromX);
@@ -370,7 +373,7 @@ function Detector(image) {
         result += this.sizeOfBlackWhiteBlackRun(fromX, fromY, otherToX, otherToY);
         return result - 1
     };
-    this.calculateModuleSizeOneWay = function (pattern, otherPattern) {
+    this.calculateModuleSizeOneWay = function(pattern, otherPattern) {
         var moduleSizeEst1 = this.sizeOfBlackWhiteBlackRunBothWays(Math.floor(pattern.X), Math.floor(pattern.Y), Math.floor(otherPattern.X), Math.floor(otherPattern.Y));
         var moduleSizeEst2 = this.sizeOfBlackWhiteBlackRunBothWays(Math.floor(otherPattern.X), Math.floor(otherPattern.Y), Math.floor(pattern.X), Math.floor(pattern.Y));
         if (isNaN(moduleSizeEst1)) {
@@ -381,15 +384,15 @@ function Detector(image) {
         }
         return (moduleSizeEst1 + moduleSizeEst2) / 14
     };
-    this.calculateModuleSize = function (topLeft, topRight, bottomLeft) {
+    this.calculateModuleSize = function(topLeft, topRight, bottomLeft) {
         return (this.calculateModuleSizeOneWay(topLeft, topRight) + this.calculateModuleSizeOneWay(topLeft, bottomLeft)) / 2
     };
-    this.distance = function (pattern1, pattern2) {
+    this.distance = function(pattern1, pattern2) {
         var xDiff = pattern1.X - pattern2.X;
         var yDiff = pattern1.Y - pattern2.Y;
         return Math.sqrt((xDiff * xDiff + yDiff * yDiff))
     };
-    this.computeDimension = function (topLeft, topRight, bottomLeft, moduleSize) {
+    this.computeDimension = function(topLeft, topRight, bottomLeft, moduleSize) {
         var tltrCentersDimension = Math.round(this.distance(topLeft, topRight) / moduleSize);
         var tlblCentersDimension = Math.round(this.distance(topLeft, bottomLeft) / moduleSize);
         var dimension = ((tltrCentersDimension + tlblCentersDimension) >> 1) + 7;
@@ -405,7 +408,7 @@ function Detector(image) {
         }
         return dimension
     };
-    this.findAlignmentInRegion = function (overallEstModuleSize, estAlignmentX, estAlignmentY, allowanceFactor) {
+    this.findAlignmentInRegion = function(overallEstModuleSize, estAlignmentX, estAlignmentY, allowanceFactor) {
         var allowance = Math.floor(allowanceFactor * overallEstModuleSize);
         var alignmentAreaLeftX = Math.max(0, estAlignmentX - allowance);
         var alignmentAreaRightX = Math.min(qrcode.width - 1, estAlignmentX + allowance);
@@ -417,7 +420,7 @@ function Detector(image) {
         var alignmentFinder = new AlignmentPatternFinder(this.image, alignmentAreaLeftX, alignmentAreaTopY, alignmentAreaRightX - alignmentAreaLeftX, alignmentAreaBottomY - alignmentAreaTopY, overallEstModuleSize, this.resultPointCallback);
         return alignmentFinder.find()
     };
-    this.createTransform = function (topLeft, topRight, bottomLeft, alignmentPattern, dimension) {
+    this.createTransform = function(topLeft, topRight, bottomLeft, alignmentPattern, dimension) {
         var dimMinusThree = dimension - 3.5;
         var bottomRightX;
         var bottomRightY;
@@ -435,11 +438,11 @@ function Detector(image) {
         var transform = PerspectiveTransform.quadrilateralToQuadrilateral(3.5, 3.5, dimMinusThree, 3.5, sourceBottomRightX, sourceBottomRightY, 3.5, dimMinusThree, topLeft.X, topLeft.Y, topRight.X, topRight.Y, bottomRightX, bottomRightY, bottomLeft.X, bottomLeft.Y);
         return transform
     };
-    this.sampleGrid = function (image, transform, dimension) {
+    this.sampleGrid = function(image, transform, dimension) {
         var sampler = aeink;
         return sampler.sampleGrid3(image, dimension, transform)
     };
-    this.processFinderPatternInfo = function (info) {
+    this.processFinderPatternInfo = function(info) {
         var topLeft = info.TopLeft;
         var topRight = info.TopRight;
         var bottomLeft = info.BottomLeft;
@@ -472,7 +475,7 @@ function Detector(image) {
         }
         return new DetectorResult(bits, points)
     };
-    this.detect = function () {
+    this.detect = function() {
         var info = new FinderPatternFinder().findFinderPattern(this.image);
         return this.processFinderPatternInfo(info)
     }
@@ -484,32 +487,32 @@ var BITS_SET_IN_HALF_BYTE = new Array(0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 
 function FormatInformation(formatInfo) {
     this.errorCorrectionLevel = ErrorCorrectionLevel.forBits((formatInfo >> 3) & 3);
     this.dataMask = (formatInfo & 7);
-    this.__defineGetter__("ErrorCorrectionLevel", function () {
+    this.__defineGetter__("ErrorCorrectionLevel", function() {
         return this.errorCorrectionLevel
     });
-    this.__defineGetter__("DataMask", function () {
+    this.__defineGetter__("DataMask", function() {
         return this.dataMask
     });
-    this.GetHashCode = function () {
+    this.GetHashCode = function() {
         return (this.errorCorrectionLevel.ordinal() << 3) | this.dataMask
     };
-    this.Equals = function (o) {
+    this.Equals = function(o) {
         var other = o;
         return this.errorCorrectionLevel == other.errorCorrectionLevel && this.dataMask == other.dataMask
     }
 }
-FormatInformation.numBitsDiffering = function (a, b) {
+FormatInformation.numBitsDiffering = function(a, b) {
     a ^= b;
     return BITS_SET_IN_HALF_BYTE[a & 15] + BITS_SET_IN_HALF_BYTE[(URShift(a, 4) & 15)] + BITS_SET_IN_HALF_BYTE[(URShift(a, 8) & 15)] + BITS_SET_IN_HALF_BYTE[(URShift(a, 12) & 15)] + BITS_SET_IN_HALF_BYTE[(URShift(a, 16) & 15)] + BITS_SET_IN_HALF_BYTE[(URShift(a, 20) & 15)] + BITS_SET_IN_HALF_BYTE[(URShift(a, 24) & 15)] + BITS_SET_IN_HALF_BYTE[(URShift(a, 28) & 15)]
 };
-FormatInformation.decodeFormatInformation = function (maskedFormatInfo) {
+FormatInformation.decodeFormatInformation = function(maskedFormatInfo) {
     var formatInfo = FormatInformation.doDecodeFormatInformation(maskedFormatInfo);
     if (formatInfo != null) {
         return formatInfo
     }
     return FormatInformation.doDecodeFormatInformation(maskedFormatInfo ^ FORMAT_INFO_MASK_QR)
 };
-FormatInformation.doDecodeFormatInformation = function (maskedFormatInfo) {
+FormatInformation.doDecodeFormatInformation = function(maskedFormatInfo) {
     var bestDifference = 4294967295;
     var bestFormatInfo = 0;
     for (var i = 0; i < FORMAT_INFO_DECODE_LOOKUP.length; i++) {
@@ -534,17 +537,17 @@ function ErrorCorrectionLevel(ordinal, bits, name) {
     this.ordinal_Renamed_Field = ordinal;
     this.bits = bits;
     this.name = name;
-    this.__defineGetter__("Bits", function () {
+    this.__defineGetter__("Bits", function() {
         return this.bits
     });
-    this.__defineGetter__("Name", function () {
+    this.__defineGetter__("Name", function() {
         return this.name
     });
-    this.ordinal = function () {
+    this.ordinal = function() {
         return this.ordinal_Renamed_Field
     }
 }
-ErrorCorrectionLevel.forBits = function (bits) {
+ErrorCorrectionLevel.forBits = function(bits) {
     if (bits < 0 || bits >= FOR_BITS.length) {
         throw "ArgumentException"
     }
@@ -574,37 +577,37 @@ function BitMatrix(width, height) {
     for (var i = 0; i < this.bits.length; i++) {
         this.bits[i] = 0
     }
-    this.__defineGetter__("Width", function () {
+    this.__defineGetter__("Width", function() {
         return this.width
     });
-    this.__defineGetter__("Height", function () {
+    this.__defineGetter__("Height", function() {
         return this.height
     });
-    this.__defineGetter__("Dimension", function () {
+    this.__defineGetter__("Dimension", function() {
         if (this.width != this.height) {
             throw "Can't call getDimension() on a non-square matrix"
         }
         return this.width
     });
-    this.get_Renamed = function (x, y) {
+    this.get_Renamed = function(x, y) {
         var offset = y * this.rowSize + (x >> 5);
         return ((URShift(this.bits[offset], (x & 31))) & 1) != 0
     };
-    this.set_Renamed = function (x, y) {
+    this.set_Renamed = function(x, y) {
         var offset = y * this.rowSize + (x >> 5);
         this.bits[offset] |= 1 << (x & 31)
     };
-    this.flip = function (x, y) {
+    this.flip = function(x, y) {
         var offset = y * this.rowSize + (x >> 5);
         this.bits[offset] ^= 1 << (x & 31)
     };
-    this.clear = function () {
+    this.clear = function() {
         var max = this.bits.length;
         for (var i = 0; i < max; i++) {
             this.bits[i] = 0
         }
     };
-    this.setRegion = function (left, top, width, height) {
+    this.setRegion = function(left, top, width, height) {
         if (top < 0 || left < 0) {
             throw "Left and top must be nonnegative"
         }
@@ -628,14 +631,14 @@ function BitMatrix(width, height) {
 function DataBlock(numDataCodewords, codewords) {
     this.numDataCodewords = numDataCodewords;
     this.codewords = codewords;
-    this.__defineGetter__("NumDataCodewords", function () {
+    this.__defineGetter__("NumDataCodewords", function() {
         return this.numDataCodewords
     });
-    this.__defineGetter__("Codewords", function () {
+    this.__defineGetter__("Codewords", function() {
         return this.codewords
     })
 }
-DataBlock.getDataBlocks = function (rawCodewords, version, ecLevel) {
+DataBlock.getDataBlocks = function(rawCodewords, version, ecLevel) {
     if (rawCodewords.length != version.TotalCodewords) {
         throw "ArgumentException"
     }
@@ -693,10 +696,10 @@ function BitMatrixParser(bitMatrix) {
     this.bitMatrix = bitMatrix;
     this.parsedVersion = null;
     this.parsedFormatInfo = null;
-    this.copyBit = function (i, j, versionBits) {
+    this.copyBit = function(i, j, versionBits) {
         return this.bitMatrix.get_Renamed(i, j) ? (versionBits << 1) | 1 : versionBits << 1
     };
-    this.readFormatInformation = function () {
+    this.readFormatInformation = function() {
         if (this.parsedFormatInfo != null) {
             return this.parsedFormatInfo
         }
@@ -729,7 +732,7 @@ function BitMatrixParser(bitMatrix) {
         }
         throw "Error readFormatInformation"
     };
-    this.readVersion = function () {
+    this.readVersion = function() {
         if (this.parsedVersion != null) {
             return this.parsedVersion
         }
@@ -761,7 +764,7 @@ function BitMatrixParser(bitMatrix) {
         }
         throw "Error readVersion"
     };
-    this.readCodewords = function () {
+    this.readCodewords = function() {
         var formatInfo = this.readFormatInformation();
         var version = this.readVersion();
         var dataMask = DataMask.forReference(formatInfo.DataMask);
@@ -803,7 +806,7 @@ function BitMatrixParser(bitMatrix) {
     }
 }
 var DataMask = {};
-DataMask.forReference = function (reference) {
+DataMask.forReference = function(reference) {
     if (reference < 0 || reference > 7) {
         throw "System.ArgumentException"
     }
@@ -811,7 +814,7 @@ DataMask.forReference = function (reference) {
 };
 
 function DataMask000() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -820,13 +823,13 @@ function DataMask000() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         return ((i + j) & 1) == 0
     }
 }
 
 function DataMask001() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -835,13 +838,13 @@ function DataMask001() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         return (i & 1) == 0
     }
 }
 
 function DataMask010() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -850,13 +853,13 @@ function DataMask010() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         return j % 3 == 0
     }
 }
 
 function DataMask011() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -865,13 +868,13 @@ function DataMask011() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         return (i + j) % 3 == 0
     }
 }
 
 function DataMask100() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -880,13 +883,13 @@ function DataMask100() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         return (((URShift(i, 1)) + (j / 3)) & 1) == 0
     }
 }
 
 function DataMask101() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -895,14 +898,14 @@ function DataMask101() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         var temp = i * j;
         return (temp & 1) + (temp % 3) == 0
     }
 }
 
 function DataMask110() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -911,14 +914,14 @@ function DataMask110() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         var temp = i * j;
         return (((temp & 1) + (temp % 3)) & 1) == 0
     }
 }
 
 function DataMask111() {
-    this.unmaskBitMatrix = function (bits, dimension) {
+    this.unmaskBitMatrix = function(bits, dimension) {
         for (var i = 0; i < dimension; i++) {
             for (var j = 0; j < dimension; j++) {
                 if (this.isMasked(i, j)) {
@@ -927,7 +930,7 @@ function DataMask111() {
             }
         }
     };
-    this.isMasked = function (i, j) {
+    this.isMasked = function(i, j) {
         return ((((i + j) & 1) + ((i * j) % 3)) & 1) == 0
     }
 }
@@ -935,7 +938,7 @@ DataMask.DATA_MASKS = new Array(new DataMask000(), new DataMask001(), new DataMa
 
 function ReedSolomonDecoder(field) {
     this.field = field;
-    this.decode = function (received, twoS) {
+    this.decode = function(received, twoS) {
         var poly = new GF256Poly(this.field, received);
         var syndromeCoefficients = new Array(twoS);
         for (var i = 0; i < syndromeCoefficients.length; i++) {
@@ -967,7 +970,7 @@ function ReedSolomonDecoder(field) {
             received[position] = GF256.addOrSubtract(received[position], errorMagnitudes[i])
         }
     };
-    this.runEuclideanAlgorithm = function (a, b, R) {
+    this.runEuclideanAlgorithm = function(a, b, R) {
         if (a.Degree < b.Degree) {
             var temp = a;
             a = b;
@@ -1011,7 +1014,7 @@ function ReedSolomonDecoder(field) {
         var omega = r.multiply2(inverse);
         return new Array(sigma, omega)
     };
-    this.findErrorLocations = function (errorLocator) {
+    this.findErrorLocations = function(errorLocator) {
         var numErrors = errorLocator.Degree;
         if (numErrors == 1) {
             return new Array(errorLocator.getCoefficient(1))
@@ -1029,7 +1032,7 @@ function ReedSolomonDecoder(field) {
         }
         return result
     };
-    this.findErrorMagnitudes = function (errorEvaluator, errorLocations, dataMatrix) {
+    this.findErrorMagnitudes = function(errorEvaluator, errorLocations, dataMatrix) {
         var s = errorLocations.length;
         var result = new Array(s);
         for (var i = 0; i < s; i++) {
@@ -1074,19 +1077,19 @@ function GF256Poly(field, coefficients) {
     } else {
         this.coefficients = coefficients
     }
-    this.__defineGetter__("Zero", function () {
+    this.__defineGetter__("Zero", function() {
         return this.coefficients[0] == 0
     });
-    this.__defineGetter__("Degree", function () {
+    this.__defineGetter__("Degree", function() {
         return this.coefficients.length - 1
     });
-    this.__defineGetter__("Coefficients", function () {
+    this.__defineGetter__("Coefficients", function() {
         return this.coefficients
     });
-    this.getCoefficient = function (degree) {
+    this.getCoefficient = function(degree) {
         return this.coefficients[this.coefficients.length - 1 - degree]
     };
-    this.evaluateAt = function (a) {
+    this.evaluateAt = function(a) {
         if (a == 0) {
             return this.getCoefficient(0)
         }
@@ -1104,7 +1107,7 @@ function GF256Poly(field, coefficients) {
         }
         return result2
     };
-    this.addOrSubtract = function (other) {
+    this.addOrSubtract = function(other) {
         if (this.field != other.field) {
             throw "GF256Polys do not have same GF256 field"
         }
@@ -1131,7 +1134,7 @@ function GF256Poly(field, coefficients) {
         }
         return new GF256Poly(field, sumDiff)
     };
-    this.multiply1 = function (other) {
+    this.multiply1 = function(other) {
         if (this.field != other.field) {
             throw "GF256Polys do not have same GF256 field"
         }
@@ -1151,7 +1154,7 @@ function GF256Poly(field, coefficients) {
         }
         return new GF256Poly(this.field, product)
     };
-    this.multiply2 = function (scalar) {
+    this.multiply2 = function(scalar) {
         if (scalar == 0) {
             return this.field.Zero
         }
@@ -1165,7 +1168,7 @@ function GF256Poly(field, coefficients) {
         }
         return new GF256Poly(this.field, product)
     };
-    this.multiplyByMonomial = function (degree, coefficient) {
+    this.multiplyByMonomial = function(degree, coefficient) {
         if (degree < 0) {
             throw "System.ArgumentException"
         }
@@ -1182,7 +1185,7 @@ function GF256Poly(field, coefficients) {
         }
         return new GF256Poly(this.field, product)
     };
-    this.divide = function (other) {
+    this.divide = function(other) {
         if (this.field != other.field) {
             throw "GF256Polys do not have same GF256 field"
         }
@@ -1225,13 +1228,13 @@ function GF256(primitive) {
     var at1 = new Array(1);
     at1[0] = 1;
     this.one = new GF256Poly(this, new Array(at1));
-    this.__defineGetter__("Zero", function () {
+    this.__defineGetter__("Zero", function() {
         return this.zero
     });
-    this.__defineGetter__("One", function () {
+    this.__defineGetter__("One", function() {
         return this.one
     });
-    this.buildMonomial = function (degree, coefficient) {
+    this.buildMonomial = function(degree, coefficient) {
         if (degree < 0) {
             throw "System.ArgumentException"
         }
@@ -1245,22 +1248,22 @@ function GF256(primitive) {
         coefficients[0] = coefficient;
         return new GF256Poly(this, coefficients)
     };
-    this.exp = function (a) {
+    this.exp = function(a) {
         return this.expTable[a]
     };
-    this.log = function (a) {
+    this.log = function(a) {
         if (a == 0) {
             throw "System.ArgumentException"
         }
         return this.logTable[a]
     };
-    this.inverse = function (a) {
+    this.inverse = function(a) {
         if (a == 0) {
             throw "System.ArithmeticException"
         }
         return this.expTable[255 - this.logTable[a]]
     };
-    this.multiply = function (a, b) {
+    this.multiply = function(a, b) {
         if (a == 0 || b == 0) {
             return 0
         }
@@ -1275,12 +1278,12 @@ function GF256(primitive) {
 }
 GF256.QR_CODE_FIELD = new GF256(285);
 GF256.DATA_MATRIX_FIELD = new GF256(301);
-GF256.addOrSubtract = function (a, b) {
+GF256.addOrSubtract = function(a, b) {
     return a ^ b
 };
 var Decoder = {};
 Decoder.rsDecoder = new ReedSolomonDecoder(GF256.QR_CODE_FIELD);
-Decoder.correctErrors = function (codewordBytes, numDataCodewords) {
+Decoder.correctErrors = function(codewordBytes, numDataCodewords) {
     var numCodewords = codewordBytes.length;
     var codewordsInts = new Array(numCodewords);
     for (var i = 0; i < numCodewords; i++) {
@@ -1296,7 +1299,7 @@ Decoder.correctErrors = function (codewordBytes, numDataCodewords) {
         codewordBytes[i] = codewordsInts[i]
     }
 };
-Decoder.decode = function (bits) {
+Decoder.decode = function(bits) {
     var parser = new BitMatrixParser(bits);
     var version = parser.readVersion();
     var ecLevel = parser.readFormatInformation().ErrorCorrectionLevel;
@@ -1333,7 +1336,7 @@ qrcode.sizeOfDataLengthInfo = [
     [14, 13, 16, 12]
 ];
 qrcode.callback = null;
-qrcode.vidSuccess = function (stream) {
+qrcode.vidSuccess = function(stream) {
     qrcode.localstream = stream;
     if (qrcode.webkit) {
         qrcode.video.src = window.webkitURL.createObjectURL(stream)
@@ -1353,11 +1356,11 @@ qrcode.vidSuccess = function (stream) {
     qrcode.canvas_qr2.height = qrcode.video.videoHeight;
     setTimeout(qrcode.captureToCanvas, 500)
 };
-qrcode.vidError = function (error) {
+qrcode.vidError = function(error) {
     qrcode.gUM = false;
     return
 };
-qrcode.captureToCanvas = function () {
+qrcode.captureToCanvas = function() {
     if (qrcode.gUM) {
         try {
             if (qrcode.video.videoWidth == 0) {
@@ -1380,14 +1383,14 @@ qrcode.captureToCanvas = function () {
         }
     }
 };
-qrcode.setWebcam = function (videoId) {
+qrcode.setWebcam = function(videoId) {
     var n = navigator;
     qrcode.video = document.getElementById(videoId);
     var options = true;
     if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
         try {
-            navigator.mediaDevices.enumerateDevices().then(function (devices) {
-                devices.forEach(function (device) {
+            navigator.mediaDevices.enumerateDevices().then(function(devices) {
+                devices.forEach(function(device) {
                     console.log("deb1");
                     if (device.kind === "videoinput") {
                         if (device.label.toLowerCase().search("back") > -1) {
@@ -1428,7 +1431,7 @@ qrcode.setWebcam = function (videoId) {
         }
     }
 };
-qrcode.decode = function (src) {
+qrcode.decode = function(src) {
     if (arguments.length == 0) {
         if (qrcode.canvas_qr2) {
             var canvas_qr = qrcode.canvas_qr2;
@@ -1448,7 +1451,7 @@ qrcode.decode = function (src) {
     } else {
         var image = new Image();
         image.crossOrigin = "Anonymous";
-        image.onload = function () {
+        image.onload = function() {
             var canvas_out = document.getElementById("out-canvas");
             if (canvas_out != null) {
                 var outctx = canvas_out.getContext("2d");
@@ -1488,7 +1491,7 @@ qrcode.decode = function (src) {
                 qrcode.callback(qrcode.result)
             }
         };
-        image.onerror = function () {
+        image.onerror = function() {
             if (qrcode.callback != null) {
                 qrcode.callback("Failed to load the image")
             }
@@ -1496,11 +1499,11 @@ qrcode.decode = function (src) {
         image.src = src
     }
 };
-qrcode.isUrl = function (s) {
+qrcode.isUrl = function(s) {
     var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     return regexp.test(s)
 };
-qrcode.decode_url = function (s) {
+qrcode.decode_url = function(s) {
     var escaped = "";
     try {
         escaped = escape(s)
@@ -1517,14 +1520,14 @@ qrcode.decode_url = function (s) {
     }
     return ret
 };
-qrcode.decode_utf8 = function (s) {
+qrcode.decode_utf8 = function(s) {
     if (qrcode.isUrl(s)) {
         return qrcode.decode_url(s)
     } else {
         return s
     }
 };
-qrcode.process = function (ctx) {
+qrcode.process = function(ctx) {
     var start = new Date().getTime();
     var image = qrcode.grayScaleToBitmap(qrcode.grayscale());
     if (qrcode.debug) {
@@ -1564,7 +1567,7 @@ qrcode.process = function (ctx) {
     console.log(time);
     return qrcode.decode_utf8(str)
 };
-qrcode.getPixel = function (x, y) {
+qrcode.getPixel = function(x, y) {
     if (qrcode.width < x) {
         throw "point error"
     }
@@ -1575,7 +1578,7 @@ qrcode.getPixel = function (x, y) {
     var p = (qrcode.imagedata.data[point] * 33 + qrcode.imagedata.data[point + 1] * 34 + qrcode.imagedata.data[point + 2] * 33) / 100;
     return p
 };
-qrcode.binarize = function (th) {
+qrcode.binarize = function(th) {
     var ret = new Array(qrcode.width * qrcode.height);
     for (var y = 0; y < qrcode.height; y++) {
         for (var x = 0; x < qrcode.width; x++) {
@@ -1585,7 +1588,7 @@ qrcode.binarize = function (th) {
     }
     return ret
 };
-qrcode.getMiddleBrightnessPerArea = function (image) {
+qrcode.getMiddleBrightnessPerArea = function(image) {
     var numSqrtArea = 4;
     var areaWidth = Math.floor(qrcode.width / numSqrtArea);
     var areaHeight = Math.floor(qrcode.height / numSqrtArea);
@@ -1623,7 +1626,7 @@ qrcode.getMiddleBrightnessPerArea = function (image) {
     }
     return middle
 };
-qrcode.grayScaleToBitmap = function (grayScale) {
+qrcode.grayScaleToBitmap = function(grayScale) {
     var middle = qrcode.getMiddleBrightnessPerArea(grayScale);
     var sqrtNumArea = middle.length;
     var areaWidth = Math.floor(qrcode.width / sqrtNumArea);
@@ -1641,7 +1644,7 @@ qrcode.grayScaleToBitmap = function (grayScale) {
     }
     return bitmap
 };
-qrcode.grayscale = function () {
+qrcode.grayscale = function() {
     var buff = new ArrayBuffer(qrcode.width * qrcode.height);
     var ret = new Uint8Array(buff);
     for (var y = 0; y < qrcode.height; y++) {
@@ -1664,7 +1667,7 @@ var MIN_SKIP = 3;
 var MAX_MODULES = 57;
 var INTEGER_MATH_SHIFT = 8;
 var CENTER_QUORUM = 2;
-qrcode.orderBestPatterns = function (patterns) {
+qrcode.orderBestPatterns = function(patterns) {
     function distance(pattern1, pattern2) {
         var xDiff = pattern1.X - pattern2.X;
         var yDiff = pattern1.Y - pattern2.Y;
@@ -1710,22 +1713,22 @@ function FinderPattern(posX, posY, estimatedModuleSize) {
     this.y = posY;
     this.count = 1;
     this.estimatedModuleSize = estimatedModuleSize;
-    this.__defineGetter__("EstimatedModuleSize", function () {
+    this.__defineGetter__("EstimatedModuleSize", function() {
         return this.estimatedModuleSize
     });
-    this.__defineGetter__("Count", function () {
+    this.__defineGetter__("Count", function() {
         return this.count
     });
-    this.__defineGetter__("X", function () {
+    this.__defineGetter__("X", function() {
         return this.x
     });
-    this.__defineGetter__("Y", function () {
+    this.__defineGetter__("Y", function() {
         return this.y
     });
-    this.incrementCount = function () {
+    this.incrementCount = function() {
         this.count++
     };
-    this.aboutEquals = function (moduleSize, i, j) {
+    this.aboutEquals = function(moduleSize, i, j) {
         if (Math.abs(i - this.y) <= moduleSize && Math.abs(j - this.x) <= moduleSize) {
             var moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
             return moduleSizeDiff <= 1 || moduleSizeDiff / this.estimatedModuleSize <= 1
@@ -1738,13 +1741,13 @@ function FinderPatternInfo(patternCenters) {
     this.bottomLeft = patternCenters[0];
     this.topLeft = patternCenters[1];
     this.topRight = patternCenters[2];
-    this.__defineGetter__("BottomLeft", function () {
+    this.__defineGetter__("BottomLeft", function() {
         return this.bottomLeft
     });
-    this.__defineGetter__("TopLeft", function () {
+    this.__defineGetter__("TopLeft", function() {
         return this.topLeft
     });
-    this.__defineGetter__("TopRight", function () {
+    this.__defineGetter__("TopRight", function() {
         return this.topRight
     })
 }
@@ -1755,7 +1758,7 @@ function FinderPatternFinder() {
     this.hasSkipped = false;
     this.crossCheckStateCount = new Array(0, 0, 0, 0, 0);
     this.resultPointCallback = null;
-    this.__defineGetter__("CrossCheckStateCount", function () {
+    this.__defineGetter__("CrossCheckStateCount", function() {
         this.crossCheckStateCount[0] = 0;
         this.crossCheckStateCount[1] = 0;
         this.crossCheckStateCount[2] = 0;
@@ -1763,7 +1766,7 @@ function FinderPatternFinder() {
         this.crossCheckStateCount[4] = 0;
         return this.crossCheckStateCount
     });
-    this.foundPatternCross = function (stateCount) {
+    this.foundPatternCross = function(stateCount) {
         var totalModuleSize = 0;
         for (var i = 0; i < 5; i++) {
             var count = stateCount[i];
@@ -1779,10 +1782,10 @@ function FinderPatternFinder() {
         var maxVariance = Math.floor(moduleSize / 2);
         return Math.abs(moduleSize - (stateCount[0] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(moduleSize - (stateCount[1] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(3 * moduleSize - (stateCount[2] << INTEGER_MATH_SHIFT)) < 3 * maxVariance && Math.abs(moduleSize - (stateCount[3] << INTEGER_MATH_SHIFT)) < maxVariance && Math.abs(moduleSize - (stateCount[4] << INTEGER_MATH_SHIFT)) < maxVariance
     };
-    this.centerFromEnd = function (stateCount, end) {
+    this.centerFromEnd = function(stateCount, end) {
         return (end - stateCount[4] - stateCount[3]) - stateCount[2] / 2
     };
-    this.crossCheckVertical = function (startI, centerJ, maxCount, originalStateCountTotal) {
+    this.crossCheckVertical = function(startI, centerJ, maxCount, originalStateCountTotal) {
         var image = this.image;
         var maxI = qrcode.height;
         var stateCount = this.CrossCheckStateCount;
@@ -1836,7 +1839,7 @@ function FinderPatternFinder() {
         }
         return this.foundPatternCross(stateCount) ? this.centerFromEnd(stateCount, i) : NaN
     };
-    this.crossCheckHorizontal = function (startJ, centerI, maxCount, originalStateCountTotal) {
+    this.crossCheckHorizontal = function(startJ, centerI, maxCount, originalStateCountTotal) {
         var image = this.image;
         var maxJ = qrcode.width;
         var stateCount = this.CrossCheckStateCount;
@@ -1890,7 +1893,7 @@ function FinderPatternFinder() {
         }
         return this.foundPatternCross(stateCount) ? this.centerFromEnd(stateCount, j) : NaN
     };
-    this.handlePossibleCenter = function (stateCount, i, j) {
+    this.handlePossibleCenter = function(stateCount, i, j) {
         var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
         var centerJ = this.centerFromEnd(stateCount, j);
         var centerI = this.crossCheckVertical(i, Math.floor(centerJ), stateCount[2], stateCountTotal);
@@ -1920,7 +1923,7 @@ function FinderPatternFinder() {
         }
         return false
     };
-    this.selectBestPatterns = function () {
+    this.selectBestPatterns = function() {
         var startSize = this.possibleCenters.length;
         if (startSize < 3) {
             throw "Couldn't find enough finder patterns (found " + startSize + ")"
@@ -1934,7 +1937,7 @@ function FinderPatternFinder() {
                 square += (centerValue * centerValue)
             }
             var average = totalModuleSize / startSize;
-            this.possibleCenters.sort(function (center1, center2) {
+            this.possibleCenters.sort(function(center1, center2) {
                 var dA = Math.abs(center2.EstimatedModuleSize - average);
                 var dB = Math.abs(center1.EstimatedModuleSize - average);
                 if (dA < dB) {
@@ -1957,7 +1960,7 @@ function FinderPatternFinder() {
             }
         }
         if (this.possibleCenters.length > 3) {
-            this.possibleCenters.sort(function (a, b) {
+            this.possibleCenters.sort(function(a, b) {
                 if (a.count > b.count) {
                     return -1
                 }
@@ -1969,7 +1972,7 @@ function FinderPatternFinder() {
         }
         return new Array(this.possibleCenters[0], this.possibleCenters[1], this.possibleCenters[2])
     };
-    this.findRowSkip = function () {
+    this.findRowSkip = function() {
         var max = this.possibleCenters.length;
         if (max <= 1) {
             return 0
@@ -1988,7 +1991,7 @@ function FinderPatternFinder() {
         }
         return 0
     };
-    this.haveMultiplyConfirmedCenters = function () {
+    this.haveMultiplyConfirmedCenters = function() {
         var confirmedCount = 0;
         var totalModuleSize = 0;
         var max = this.possibleCenters.length;
@@ -2010,7 +2013,7 @@ function FinderPatternFinder() {
         }
         return totalDeviation <= 0.05 * totalModuleSize
     };
-    this.findFinderPattern = function (image) {
+    this.findFinderPattern = function(image) {
         var tryHarder = false;
         this.image = image;
         var maxI = qrcode.height;
@@ -2099,22 +2102,22 @@ function AlignmentPattern(posX, posY, estimatedModuleSize) {
     this.y = posY;
     this.count = 1;
     this.estimatedModuleSize = estimatedModuleSize;
-    this.__defineGetter__("EstimatedModuleSize", function () {
+    this.__defineGetter__("EstimatedModuleSize", function() {
         return this.estimatedModuleSize
     });
-    this.__defineGetter__("Count", function () {
+    this.__defineGetter__("Count", function() {
         return this.count
     });
-    this.__defineGetter__("X", function () {
+    this.__defineGetter__("X", function() {
         return Math.floor(this.x)
     });
-    this.__defineGetter__("Y", function () {
+    this.__defineGetter__("Y", function() {
         return Math.floor(this.y)
     });
-    this.incrementCount = function () {
+    this.incrementCount = function() {
         this.count++
     };
-    this.aboutEquals = function (moduleSize, i, j) {
+    this.aboutEquals = function(moduleSize, i, j) {
         if (Math.abs(i - this.y) <= moduleSize && Math.abs(j - this.x) <= moduleSize) {
             var moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
             return moduleSizeDiff <= 1 || moduleSizeDiff / this.estimatedModuleSize <= 1
@@ -2133,10 +2136,10 @@ function AlignmentPatternFinder(image, startX, startY, width, height, moduleSize
     this.moduleSize = moduleSize;
     this.crossCheckStateCount = new Array(0, 0, 0);
     this.resultPointCallback = resultPointCallback;
-    this.centerFromEnd = function (stateCount, end) {
+    this.centerFromEnd = function(stateCount, end) {
         return (end - stateCount[2]) - stateCount[1] / 2
     };
-    this.foundPatternCross = function (stateCount) {
+    this.foundPatternCross = function(stateCount) {
         var moduleSize = this.moduleSize;
         var maxVariance = moduleSize / 2;
         for (var i = 0; i < 3; i++) {
@@ -2146,7 +2149,7 @@ function AlignmentPatternFinder(image, startX, startY, width, height, moduleSize
         }
         return true
     };
-    this.crossCheckVertical = function (startI, centerJ, maxCount, originalStateCountTotal) {
+    this.crossCheckVertical = function(startI, centerJ, maxCount, originalStateCountTotal) {
         var image = this.image;
         var maxI = qrcode.height;
         var stateCount = this.crossCheckStateCount;
@@ -2189,7 +2192,7 @@ function AlignmentPatternFinder(image, startX, startY, width, height, moduleSize
         }
         return this.foundPatternCross(stateCount) ? this.centerFromEnd(stateCount, i) : NaN
     };
-    this.handlePossibleCenter = function (stateCount, i, j) {
+    this.handlePossibleCenter = function(stateCount, i, j) {
         var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
         var centerJ = this.centerFromEnd(stateCount, j);
         var centerI = this.crossCheckVertical(i, Math.floor(centerJ), 2 * stateCount[1], stateCountTotal);
@@ -2210,7 +2213,7 @@ function AlignmentPatternFinder(image, startX, startY, width, height, moduleSize
         }
         return null
     };
-    this.find = function () {
+    this.find = function() {
         var startX = this.startX;
         var height = this.height;
         var maxJ = startX + width;
@@ -2285,7 +2288,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
             }
         }
     }
-    this.getNextBits = function (numBits) {
+    this.getNextBits = function(numBits) {
         var bits = 0;
         if (numBits < this.bitPointer + 1) {
             var mask = 0;
@@ -2338,14 +2341,14 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
             }
         }
     };
-    this.NextMode = function () {
+    this.NextMode = function() {
         if ((this.blockPointer > this.blocks.length - this.numErrorCorrectionCode - 2)) {
             return 0
         } else {
             return this.getNextBits(4)
         }
     };
-    this.getDataLength = function (modeIndicator) {
+    this.getDataLength = function(modeIndicator) {
         var index = 0;
         while (true) {
             if ((modeIndicator >> index) == 1) {
@@ -2355,7 +2358,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
         }
         return this.getNextBits(qrcode.sizeOfDataLengthInfo[this.dataLengthMode][index])
     };
-    this.getRomanAndFigureString = function (dataLength) {
+    this.getRomanAndFigureString = function(dataLength) {
         var length = dataLength;
         var intData = 0;
         var strData = "";
@@ -2378,7 +2381,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
         } while (length > 0);
         return strData
     };
-    this.getFigureString = function (dataLength) {
+    this.getFigureString = function(dataLength) {
         var length = dataLength;
         var intData = 0;
         var strData = "";
@@ -2410,7 +2413,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
         } while (length > 0);
         return strData
     };
-    this.get8bitByteArray = function (dataLength) {
+    this.get8bitByteArray = function(dataLength) {
         var length = dataLength;
         var intData = 0;
         var output = new Array();
@@ -2421,7 +2424,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
         } while (length > 0);
         return output
     };
-    this.getKanjiString = function (dataLength) {
+    this.getKanjiString = function(dataLength) {
         var length = dataLength;
         var intData = 0;
         var unicodeString = "";
@@ -2441,7 +2444,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
         } while (length > 0);
         return unicodeString
     };
-    this.parseECIValue = function () {
+    this.parseECIValue = function() {
         var intData = 0;
         var firstByte = this.getNextBits(8);
         if ((firstByte & 128) == 0) {
@@ -2457,7 +2460,7 @@ function QRCodeDataBlockReader(blocks, version, numErrorCorrectionCode) {
         }
         return intData
     };
-    this.__defineGetter__("DataByte", function () {
+    this.__defineGetter__("DataByte", function() {
         var output = new Array();
         var MODE_NUMBER = 1;
         var MODE_ROMAN_AND_NUMBER = 2;
