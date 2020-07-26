@@ -17,7 +17,7 @@ aeink.checkAndNudgePoints = function(image, points) {
             if (x == width) {
                 points[offset] = width - 1;
                 nudged = true
-            } else(x != width) {
+            } else if (x != width) {
                 points[offset] = width;
                 nudged = false;
             }
